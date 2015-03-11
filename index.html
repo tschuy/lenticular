@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 3em;
+    padding: 0px;
+    margin: 0px;
+    font-weight: 700;
+}
+
+canvas {
+    position:absolute;
+    left:0px;
+    top:0px;
+}
+</style>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
+<script type="text/javascript">
+
+var phrases = [
+    {"french": "J'aime programmer", "english": "I like to program.", "time": 0000},
+    {"french": "Je suis un ananas", "english": "I am a pineapple", "time": 5000},
+    {"french": "Comment t'appelles-tu?", "english": "What is your name?", "time": 10000},
+    {"french": "Je m'appelle Evan.", "english": "My name is Evan.", "time": 15000}
+];
+
+var drawers = [drawWhiteBackground, drawRedBackground, drawBlueBackground];
+
+function runText() {
+    for (var phrase in phrases) {
+        var textDrawer = drawers[Math.floor(Math.random() * drawers.length)];
+        setTimeout(
+            textDrawer(phrases[phrase]["french"], phrases[phrase]["english"]),
+            phrases[phrase]["time"]);
+    }
+}
+
+function drawBlueBackground(french, english) {
+    // BLUE BACKGROUND
+    // white text
+    // red text
+    var ctx = document.getElementById('words').getContext('2d');
+    var x = window.innerWidth / 2;
+    var y = window.innerHeight / 2;
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    ctx.fillStyle = "#0100FB";
+    ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+    ctx.globalCompositeOperation = 'xor';
+
+    ctx.font = '700 100pt Open Sans';
+
+    ctx.fillStyle = "#FFFFFF";
+    textWidth = ctx.measureText(french).width;
+    ctx.fillText(french, (ctx.canvas.width/2) - (textWidth / 2), y);
+
+
+    ctx.globalCompositeOperation = 'darker';
+    ctx.fillStyle = "#ea0003";
+    textWidth = ctx.measureText(english).width;
+    ctx.fillText(english, (ctx.canvas.width/2) - (textWidth / 2), y);
+}
+
+function drawRedBackground(french, english) {
+    // RED BACKGROUND
+    // blue text
+    // white text
+    var ctx = document.getElementById('words').getContext('2d');
+    var x = window.innerWidth / 2;
+    var y = window.innerHeight / 2;
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    ctx.fillStyle = "#EA0003";
+    ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+
+    ctx.font = '700 100pt Open Sans';
+
+    ctx.globalCompositeOperation = 'xor';
+    ctx.fillStyle = "#FFFFFF";
+    textWidth = ctx.measureText(english).width;
+    ctx.fillText(english, (ctx.canvas.width/2) - (textWidth / 2), y);
+
+    ctx.globalCompositeOperation = 'darken';
+
+
+    ctx.fillStyle = "#0100FB";
+    textWidth = ctx.measureText(french).width;
+    ctx.fillText(french, (ctx.canvas.width/2) - (textWidth / 2), y);
+}
+
+// COLORS
+// white: #FFFFFF
+// red: #EA0003
+// blue: #0100FB
+
+function drawWhiteBackground(french, english) {
+    // RED BACKGROUND
+    // blue text
+    // white text
+    var ctx = document.getElementById('words').getContext('2d');
+    var x = window.innerWidth / 2;
+    var y = window.innerHeight / 2;
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+
+    ctx.font = '700 100pt Open Sans';
+
+    ctx.globalCompositeOperation = 'darken';
+    ctx.fillStyle = "#0100FB";
+    textWidth = ctx.measureText(french).width;
+    ctx.fillText(french, (ctx.canvas.width/2) - (textWidth / 2), y);
+
+    ctx.globalCompositeOperation = 'darken';
+
+
+    ctx.fillStyle = "#EA0003";
+    textWidth = ctx.measureText(english).width;
+    ctx.fillText(english, (ctx.canvas.width/2) - (textWidth / 2), y);
+}
+</script>
+</head>
+<body onload="runText();">
+    <canvas id='words'></canvas>
+</body>
+</html>
