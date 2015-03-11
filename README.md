@@ -3,6 +3,8 @@ Lenticular
 
 An experiment in Canvas and art.
 
+To see this in action, go to https://tschuy.com/lenticular
+
 Inspired by this video: https://www.youtube.com/watch?v=CZ8zLEYNyJI
 
 TODO:
