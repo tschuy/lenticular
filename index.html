@@ -22,7 +22,7 @@ canvas {
 <script type="text/javascript">
 
 var phrases = [
-    {"french": "J'aime programmer", "english": "I like to program.", "time": 0000},
+    {"french": "J'aime programmer", "english": "I like to program.", "time": 0},
     {"french": "Je suis un ananas", "english": "I am a pineapple", "time": 5000},
     {"french": "Comment t'appelles-tu?", "english": "What is your name?", "time": 10000},
     {"french": "Je m'appelle Evan.", "english": "My name is Evan.", "time": 15000}
@@ -33,9 +33,7 @@ var drawers = [drawWhiteBackground, drawRedBackground, drawBlueBackground];
 function runText() {
     for (var phrase in phrases) {
         var textDrawer = drawers[Math.floor(Math.random() * drawers.length)];
-        setTimeout(
-            textDrawer(phrases[phrase]["french"], phrases[phrase]["english"]),
-            phrases[phrase]["time"]);
+        setTimeout(textDrawer.bind(null, phrases[phrase].french, phrases[phrase].english), phrases[phrase].time);
     }
 }
 
