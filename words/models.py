@@ -3,11 +3,13 @@ from django.db import models
 
 class Song(models.Model):
     name = models.CharField(max_length=100, default="")
+    video = models.CharField("YouTube ID", max_length=100, default="")
 
     def get_json(self):
         return {
             'id': self.id,
             'name': self.name,
+            'youtube': self.video,
             'lyrics': [{
                 'length': l.time,
                 'english': l.english,

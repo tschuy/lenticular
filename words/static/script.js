@@ -1,3 +1,48 @@
+// load YouTube API
+
+var song;
+var player;
+var videoDone = false;
+
+function createPlayer() {
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+    height: '0',
+    width: '0',
+    videoId: song.youtube,
+    events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+    }
+    });
+}
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING && !videoDone) {
+        event.target.playVideo();
+        runText();
+        videoDone = true;
+    }
+}
+
+function stopVideo() {
+    player.stopVideo();
+}
+
+function playSong(song_id) {
+    getLyrics(song_id);
+}
 
 function getLyrics(song_id) {
     var httpRequest;
@@ -6,15 +51,16 @@ function getLyrics(song_id) {
     function makeRequest(url) {
         httpRequest = new XMLHttpRequest();
 
-        httpRequest.onreadystatechange = alertContents;
+        httpRequest.onreadystatechange = runContent;
         httpRequest.open('GET', url);
         httpRequest.send();
     }
 
-      function alertContents() {
+      function runContent() {
         if (httpRequest.readyState === 4) {
           if (httpRequest.status === 200) {
-            runText(httpRequest.responseText);
+            song = JSON.parse(httpRequest.responseText);
+            createPlayer();
           } else {
             alert('Song not found!');
           }
@@ -22,8 +68,7 @@ function getLyrics(song_id) {
     }
 }
 
-function runText(song_json) {
-    var song = JSON.parse(song_json);
+function runText() {
     var lyrics = song.lyrics;
     for (var lyric in lyrics) {
         switch (lyrics[lyric].color) {
@@ -41,6 +86,7 @@ function runText(song_json) {
             textDrawer.bind(null, lyrics[lyric].french, lyrics[lyric].english),
             lyrics[lyric].length);
     }
+    setTimeout(stopVideo, lyrics[lyrics.length - 1].length + 1000);
 }
 
 function drawBlueBackground(french, english) {
