@@ -21,19 +21,52 @@ canvas {
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
 <script type="text/javascript">
 
-var phrases = [
-    {"french": "J'aime programmer", "english": "I like to program.", "time": 0},
-    {"french": "Je suis un ananas", "english": "I am a pineapple", "time": 5000},
-    {"french": "Comment t'appelles-tu?", "english": "What is your name?", "time": 10000},
-    {"french": "Je m'appelle Evan.", "english": "My name is Evan.", "time": 15000}
-];
+function getLyrics(song_id) {
+    var httpRequest;
+    makeRequest('song/' + song_id);
+
+    function makeRequest(url) {
+        httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = alertContents;
+        httpRequest.open('GET', url);
+        httpRequest.send();
+    }
+
+      function alertContents() {
+        if (httpRequest.readyState === 4) {
+          if (httpRequest.status === 200) {
+            runText(httpRequest.responseText);
+          } else {
+            alert('Song not found!');
+          }
+      }
+    }
+}
 
 var drawers = [drawWhiteBackground, drawRedBackground, drawBlueBackground];
 
-function runText() {
-    for (var phrase in phrases) {
-        var textDrawer = drawers[Math.floor(Math.random() * drawers.length)];
-        setTimeout(textDrawer.bind(null, phrases[phrase].french, phrases[phrase].english), phrases[phrase].time);
+function runText(song_json) {
+    var song = JSON.parse(song_json);
+    var lyrics = song.lyrics;
+    console.log(lyrics);
+    for (var lyric in lyrics) {
+        console.log(lyrics[lyric].color);
+        switch (lyrics[lyric].color) {
+            case "B":
+                console.log("blue");
+                var textDrawer = drawBlueBackground;
+                break;
+            case "R":
+                console.log("red");
+                var textDrawer = drawRedBackground;
+                break;
+            case "W":
+                console.log("white");
+                var textDrawer = drawWhiteBackground;
+                break;
+        }
+        setTimeout(textDrawer.bind(null, lyrics[lyric].french, lyrics[lyric].english), lyrics[lyric].length);
     }
 }
 
@@ -123,7 +156,7 @@ function drawWhiteBackground(french, english) {
 }
 </script>
 </head>
-<body onload="runText();">
+<body onload="getLyrics({{ id }});">
     <canvas id='words'></canvas>
 </body>
 </html>
