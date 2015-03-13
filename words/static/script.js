@@ -88,7 +88,7 @@ function runText() {
                 break;
         }
         setTimeout(
-            textDrawer.bind(null, lyrics[lyric].french, lyrics[lyric].english),
+            textDrawer.bind(null, lyrics[lyric].french.toUppercase(), lyrics[lyric].english.toUppercase()),
             lyrics[lyric].length);
     }
     setTimeout(stopVideo, lyrics[lyrics.length - 1].length + 1000);
